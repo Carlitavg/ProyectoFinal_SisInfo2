@@ -1,0 +1,49 @@
+{
+	"name": "silver_sql_clientes_completos",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sql_dw_store_sales",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "SILVER"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "cst_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "cst_key",
+				"type": "varchar"
+			},
+			{
+				"name": "nombre_completo",
+				"type": "varchar"
+			},
+			{
+				"name": "estado_civil",
+				"type": "varchar"
+			},
+			{
+				"name": "genero",
+				"type": "varchar"
+			},
+			{
+				"name": "fecha_nacimiento",
+				"type": "date"
+			},
+			{
+				"name": "pais",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "SILVER",
+			"table": "CLIENTES_COMPLETOS"
+		}
+	}
+}

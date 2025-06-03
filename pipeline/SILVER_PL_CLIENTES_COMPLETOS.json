@@ -1,0 +1,35 @@
+{
+	"name": "SILVER_PL_CLIENTES_COMPLETOS",
+	"properties": {
+		"activities": [
+			{
+				"name": "silver_df_clientes_completos",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "silver_df_clientes_completos",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"folder": {
+			"name": "SILVER"
+		},
+		"annotations": []
+	}
+}
