@@ -1,5 +1,5 @@
 {
-	"name": "BRONZE_PL_CLIENTES",
+	"name": "BRONZE_PL_CLIENTES_BD",
 	"properties": {
 		"activities": [
 			{
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "bronze_df_clientes",
+						"referenceName": "bronze_df_clientes_bd",
 						"type": "DataFlowReference"
 					},
 					"compute": {
