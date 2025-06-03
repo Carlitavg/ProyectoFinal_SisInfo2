@@ -1,0 +1,35 @@
+{
+	"name": "clientes_loc_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "store_sales",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "BRONZE"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "clientes_location.csv",
+				"container": "store-sales"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "CID",
+				"type": "String"
+			},
+			{
+				"name": "CNTRY",
+				"type": "String"
+			}
+		]
+	}
+}

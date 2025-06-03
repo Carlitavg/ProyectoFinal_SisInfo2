@@ -1,0 +1,39 @@
+{
+	"name": "clientes_bd_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "store_sales",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "BRONZE"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "clientes_bd_gen.csv",
+				"container": "store-sales"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "CID",
+				"type": "String"
+			},
+			{
+				"name": "BDATE",
+				"type": "String"
+			},
+			{
+				"name": "GEN",
+				"type": "String"
+			}
+		]
+	}
+}
