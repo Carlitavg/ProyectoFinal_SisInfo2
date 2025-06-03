@@ -1,0 +1,55 @@
+{
+	"name": "silver_sql_productos_completos",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sql_dw_store_sales",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "SILVER"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "prd_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "prd_key",
+				"type": "varchar"
+			},
+			{
+				"name": "prd_nombre",
+				"type": "varchar"
+			},
+			{
+				"name": "prd_cost",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 0
+			},
+			{
+				"name": "linea",
+				"type": "varchar"
+			},
+			{
+				"name": "categoria",
+				"type": "varchar"
+			},
+			{
+				"name": "subcategoria",
+				"type": "varchar"
+			},
+			{
+				"name": "requiere_mantenimiento",
+				"type": "bit"
+			}
+		],
+		"typeProperties": {
+			"schema": "SILVER",
+			"table": "PRODUCTOS_COMPLETOS"
+		}
+	}
+}

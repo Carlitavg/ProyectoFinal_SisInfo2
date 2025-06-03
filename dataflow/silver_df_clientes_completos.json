@@ -53,6 +53,9 @@
 				},
 				{
 					"name": "derivedColumn3"
+				},
+				{
+					"name": "derivedColumn4"
 				}
 			],
 			"scriptLines": [
@@ -98,7 +101,8 @@
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join2",
 				"join2 derive(nombre_completo = trim(cst_firstname) + ' ' + trim(cst_lastname)) ~> derivedColumn3",
-				"derivedColumn3 sink(allowSchemaDrift: true,",
+				"derivedColumn3 derive(cst_gndr = iif(isNull(cst_gndr), 'M', cst_gndr)) ~> derivedColumn4",
+				"derivedColumn4 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          cst_id as integer,",
