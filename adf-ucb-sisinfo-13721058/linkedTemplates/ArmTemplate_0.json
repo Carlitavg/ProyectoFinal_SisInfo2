@@ -698,6 +698,66 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/silver_sql_productos_completos')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sql_dw_store_sales",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "SILVER"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "prd_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "prd_key",
+						"type": "varchar"
+					},
+					{
+						"name": "prd_nombre",
+						"type": "varchar"
+					},
+					{
+						"name": "prd_cost",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "linea",
+						"type": "varchar"
+					},
+					{
+						"name": "categoria",
+						"type": "varchar"
+					},
+					{
+						"name": "subcategoria",
+						"type": "varchar"
+					},
+					{
+						"name": "requiere_mantenimiento",
+						"type": "bit"
+					}
+				],
+				"typeProperties": {
+					"schema": "SILVER",
+					"table": "PRODUCTOS_COMPLETOS"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sql_dw_store_sales')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/bronze_df_clientes')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -984,79 +1044,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/detalle_ventas_csv')]",
 				"[concat(variables('factoryId'), '/datasets/bronze_sql_detalle_ventas')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/bronze_df_productos')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "BRONZE"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "productos_csv",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "bronze_sql_productos",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [],
-					"scriptLines": [
-						"source(output(",
-						"          prd_id as string,",
-						"          prd_key as string,",
-						"          prd_nm as string,",
-						"          prd_cost as string,",
-						"          prd_line as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          prd_id as integer,",
-						"          prd_key as string,",
-						"          prd_nm as string,",
-						"          prd_cost as decimal(18,0),",
-						"          prd_line as string",
-						"     ),",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     truncate:true,",
-						"     format: 'table',",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     errorHandlingOption: 'stopOnFirstError',",
-						"     mapColumn(",
-						"          prd_id,",
-						"          prd_key,",
-						"          prd_nm,",
-						"          prd_cost,",
-						"          prd_line",
-						"     )) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/productos_csv')]",
-				"[concat(variables('factoryId'), '/datasets/bronze_sql_productos')]"
 			]
 		}
 	]
