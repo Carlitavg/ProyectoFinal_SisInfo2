@@ -8,14 +8,128 @@
 		"typeProperties": {
 			"sources": [
 				{
+					"dataset": {
+						"referenceName": "bronze_sql_productos",
+						"type": "DatasetReference"
+					},
 					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "bronze_sql_productos_cat",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				},
+				{
+					"dataset": {
+						"referenceName": "bronze_sql_detalle_ventas",
+						"type": "DatasetReference"
+					},
+					"name": "source3"
 				}
 			],
-			"sinks": [],
-			"transformations": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "silver_sql_productos_completos",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "derivedColumn3"
+				}
+			],
 			"scriptLines": [
-				"source(allowSchemaDrift: true,",
-				"     validateSchema: false) ~> source1"
+				"source(output(",
+				"          prd_id as integer,",
+				"          prd_key as string,",
+				"          prd_nm as string,",
+				"          prd_cost as decimal(18,0),",
+				"          prd_line as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source(output(",
+				"          ID as string,",
+				"          CAT as string,",
+				"          SUBCAT as string,",
+				"          MAINTENANCE as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source2",
+				"source(output(",
+				"          sls_ord_num as string,",
+				"          sls_prd_key as string,",
+				"          sls_cust_id as integer,",
+				"          sls_order_dt as string,",
+				"          sls_ship_dt as string,",
+				"          sls_sales as decimal(18,0),",
+				"          sls_quantity as integer,",
+				"          sls_price as decimal(18,0)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source3",
+				"source1 derive(prefix_id = replace(substring(prd_key, 0, 5), '-', '_')) ~> derivedColumn1",
+				"derivedColumn1, source2 join(prefix_id == ID,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 derive(requiere_mantenimiento = iif(MAINTENANCE == 'Yes', 1, 0)) ~> derivedColumn2",
+				"derivedColumn2 derive(prd_line = iif(isNull(trim(prd_line)), 'SL', trim(prd_line)),",
+				"          CAT = iif(isNull(trim(CAT)), 'SC', trim(CAT)),",
+				"          SUBCAT = iif(isNull(trim(SUBCAT)), 'SSC', trim(SUBCAT)),",
+				"          prd_cost = iif(isNull(prd_cost), toDecimal(0), prd_cost)",
+				") ~> derivedColumn3",
+				"derivedColumn3 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          prd_id as integer,",
+				"          prd_key as string,",
+				"          prd_nombre as string,",
+				"          prd_cost as decimal(18,0),",
+				"          linea as string,",
+				"          categoria as string,",
+				"          subcategoria as string,",
+				"          requiere_mantenimiento as boolean",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          prd_id,",
+				"          prd_key,",
+				"          prd_nombre = prd_nm,",
+				"          prd_cost,",
+				"          linea = prd_line,",
+				"          categoria = CAT,",
+				"          subcategoria = SUBCAT,",
+				"          requiere_mantenimiento",
+				"     )) ~> sink1"
 			]
 		}
 	}
